@@ -26,13 +26,9 @@ public class Main {
         Subtask subtask2 = new Subtask("Заголовок subtask2", "Текст subtask2");
         Subtask subtask3 = new Subtask("Заголовок subtask3", "Текст subtask3");
 
-        manager.newSubtask(subtask1);
-        manager.newSubtask(subtask2);
-        manager.newSubtask(subtask3);
-
-        epic1.newSubtask(subtask1);
-        epic1.newSubtask(subtask2);
-        epic2.newSubtask(subtask3);
+        manager.newSubtask(epic1.getId(), subtask1);
+        manager.newSubtask(epic1.getId(), subtask2);
+        manager.newSubtask(epic2.getId(), subtask3);
 
         /*
 
@@ -47,33 +43,34 @@ public class Main {
         есть незакрытые задачи.
 
          */
-
-        subtask1.setStatus("DONE");
-        subtask2.setStatus("DONE");
-        epic1.newStatus(); // Неправильно;
-
-        subtask3.setStatus("IN_PROGRESS");
-        epic2.newStatus(); // Неправильно;
-
-        System.out.println(epic1.getStatus());
-        System.out.println(epic2.getStatus());
-        System.out.println();
-
+        System.out.println("========================");
         System.out.println(manager.getAllTasks());
         System.out.println(manager.getAllEpics());
         System.out.println(manager.getAllSubtasks());
-        System.out.println(manager.getAllSubtaskByEpic(epic1));
-        System.out.println(manager.getAllSubtaskByEpic(epic2));
-        System.out.println();
+        System.out.println("========================");
+
+        subtask1.setStatus("DONE");
+        subtask2.setStatus("DONE");
+        subtask3.setStatus("IN_PROGRESS");
+        task1.setStatus("IN_PROGRESS");
+
+        manager.updateTask(task1);
+        manager.updateSubtask(epic1.getId(), subtask1);
+        manager.updateSubtask(epic1.getId(), subtask2);
+        manager.updateSubtask(epic2.getId(), subtask3);
+
+        System.out.println(manager.getEpicById(epic1.getId()));
+        System.out.println(manager.getEpicById(epic2.getId()));
+        System.out.println("========================");
 
         manager.printAllTasks(manager.getAllTasks());
         manager.printAllEpicsAndSubtasks(manager.getAllEpics());
-        System.out.println();
+        System.out.println("========================");
 
         manager.deleteTask(1);
         manager.deleteEpic(4);
-        manager.deleteSubtask(5); // Не удалился
-        System.out.println();
+        manager.deleteSubtask(5);
+        System.out.println("========================");
 
         manager.printAllTasks(manager.getAllTasks());
         manager.printAllEpicsAndSubtasks(manager.getAllEpics());

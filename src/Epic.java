@@ -34,4 +34,9 @@ public class Epic extends Task {
     public void newSubtask(Subtask subtask) {
         subtaskMap.put(subtask.getId(), subtask);
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "SubTasks:\n" + subtaskMap.toString();
+    }
 }

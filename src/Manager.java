@@ -25,12 +25,12 @@ public class Manager {
 
     private Map<Integer, Task> taskMap;
     private Map<Integer, Epic> epicMap;
-    private Map<Integer, Subtask> subtaskMap;
+//    private Map<Integer, Subtask> subtaskMap;
 
     public Manager() {
         taskMap = new HashMap<>();
         epicMap = new HashMap<>();
-        subtaskMap = new HashMap<>();
+//        subtaskMap = new HashMap<>();
     }
 
     // Создание. Сам объект должен передаваться в качестве параметра:
@@ -42,20 +42,8 @@ public class Manager {
         taskMap.put(task.getId(), task);
     }
 
-    public void newSubtask(Subtask subtask) {
-        subtaskMap.put(subtask.getId(), subtask);
-    }
-
-    public Map<Integer, Epic> getEpicMap() {
-        return epicMap;
-    }
-
-    public Map<Integer, Task> getTaskMap() {
-        return taskMap;
-    }
-
-    public Map<Integer, Subtask> getSubtaskMap() {
-        return subtaskMap;
+    public void newSubtask(int id, Subtask subtask) {
+        epicMap.get(id).newSubtask(subtask);
     }
 
     // Получение списка всех задач:
@@ -77,8 +65,10 @@ public class Manager {
 
     public List<Subtask> getAllSubtasks() {
         List<Subtask> subtasks = new ArrayList<>();
-        for (Map.Entry<Integer, Subtask> entry : subtaskMap.entrySet()) {
-            subtasks.add(entry.getValue());
+        for (Epic epic : epicMap.values()) {
+            for (Subtask subtask : epic.getSubtaskMap().values()) {
+                subtasks.add(subtask);
+            }
         }
         return subtasks;
     }
@@ -93,7 +83,9 @@ public class Manager {
     }
 
     public void clearSubtasks() {
-        subtaskMap.clear();
+        for (Epic epic : epicMap.values()) {
+            epic.getSubtaskMap().clear();
+        }
     }
 
     // Получение по идентификатору:
@@ -106,7 +98,13 @@ public class Manager {
     }
 
     public Subtask getSubtaskById(int id) {
-        return subtaskMap.get(id);
+        Subtask temp = null;
+        for (Epic epic : epicMap.values()) {
+            if (epic.getSubtaskMap().get(id) != null) {
+                temp = epic.getSubtaskMap().get(id);
+            }
+        }
+        return temp;
     }
 
     // Обновление. Новая версия объекта с верным идентификатором передаются в виде параметра:
@@ -118,8 +116,9 @@ public class Manager {
         epicMap.put(epic.getId(), epic);
     }
 
-    public void updateSubtask(Subtask subtask) {
-        subtaskMap.put(subtask.getId(), subtask);
+    public void updateSubtask(int id, Subtask subtask) {
+        epicMap.get(id).getSubtaskMap().put(subtask.getId(), subtask);
+        epicMap.get(id).newStatus();
     }
 
     // Удаление по идентификатору:
@@ -141,9 +140,9 @@ public class Manager {
     }
 
     // Получение списка всех подзадач определённого эпика:
-    public List<Subtask> getAllSubtaskByEpic(Epic epic) {
+    public List<Subtask> getAllSubtaskByEpic(int id) {
         List<Subtask> subtaskList = new ArrayList<>();
-        for (Subtask subtask : epic.getSubtaskMap().values()) {
+        for (Subtask subtask : epicMap.get(id).getSubtaskMap().values()) {
             subtaskList.add(subtask);
         }
         return subtaskList;
@@ -160,7 +159,7 @@ public class Manager {
     public void printAllEpicsAndSubtasks(List<Epic> epics) {
         for (Epic epic : epics) {
             System.out.println("id: " + epic.getId() + ". " + epic.getName());
-            for (Subtask subtask : getAllSubtaskByEpic(epic)) {
+            for (Subtask subtask : epic.getSubtaskMap().values()) {
                 System.out.println("    id: " + subtask.getId() + ". " + subtask.getName());
             }
         }
