@@ -1,3 +1,7 @@
+package model;
+
+import enums.Status;
+
 import java.util.*;
 
 public class Epic extends Task {
@@ -12,18 +16,18 @@ public class Epic extends Task {
         int countNew = 0;
         int countDone = 0;
         for (Subtask subtask : subtaskMap.values()) {
-            if (subtask.getStatus().equals("NEW")) {
+            if (subtask.getStatus().equals(Status.NEW)) {
                 countNew++;
-            } else if (subtask.getStatus().equals("DONE")) {
+            } else if (subtask.getStatus().equals(Status.DONE)) {
                 countDone++;
             }
         }
         if (countNew == subtaskMap.size()) {
-            super.setStatus("NEW");
+            super.setStatus(Status.NEW);
         } else if (countDone == subtaskMap.size()) {
-            super.setStatus("DONE");
+            super.setStatus(Status.DONE);
         } else {
-            super.setStatus("IN_PROGRESS");
+            super.setStatus(Status.IN_PROGRESS);
         }
     }
 
