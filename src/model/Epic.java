@@ -4,6 +4,9 @@ import enums.Status;
 
 import java.util.*;
 
+/*
+Epic - класс для большой задачи. Большая задача содержит в себе подзадачи - Subtask.
+ */
 public class Epic extends Task {
     private Map<Integer, Subtask> subtaskMap;
 
@@ -12,7 +15,16 @@ public class Epic extends Task {
         subtaskMap = new HashMap<>();
     }
 
-    public void newStatus() {
+    public Map<Integer, Subtask> getSubtaskMap() {
+        return subtaskMap;
+    }
+
+    public void newSubtask(Subtask subtask) {
+        subtaskMap.put(subtask.getId(), subtask);
+    }
+
+    @Override
+    public Status getStatus() {
         int countNew = 0;
         int countDone = 0;
         for (Subtask subtask : subtaskMap.values()) {
@@ -29,14 +41,7 @@ public class Epic extends Task {
         } else {
             super.setStatus(Status.IN_PROGRESS);
         }
-    }
-
-    public Map<Integer, Subtask> getSubtaskMap() {
-        return subtaskMap;
-    }
-
-    public void newSubtask(Subtask subtask) {
-        subtaskMap.put(subtask.getId(), subtask);
+        return super.getStatus();
     }
 
     @Override

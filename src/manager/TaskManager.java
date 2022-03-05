@@ -6,6 +6,9 @@ import model.Task;
 
 import java.util.*;
 
+/*
+TaskManager - класс управляющий всеми задачами.
+ */
 public class TaskManager {
 
     private Map<Integer, Task> taskMap;
@@ -22,7 +25,7 @@ public class TaskManager {
     public void saveEpic(Epic epic) {
         epicMap.put(epic.getId(), epic);
         if (!epic.getSubtaskMap().isEmpty()) {
-            epic.newStatus();
+            epic.getStatus();
         }
     }
 
@@ -101,12 +104,12 @@ public class TaskManager {
 
     public void updateEpic(Epic epic) {
         epicMap.put(epic.getId(), epic);
-        epicMap.get(epic.getId()).newStatus();
+        epicMap.get(epic.getId()).getStatus();
     }
 
     public void updateSubtask(Subtask subtask) {
         epicMap.get(subtask.getEpicId()).getSubtaskMap().put(subtask.getId(), subtask);
-        epicMap.get(subtask.getEpicId()).newStatus();
+        epicMap.get(subtask.getEpicId()).getStatus();
     }
 
     // Удаление по идентификатору:

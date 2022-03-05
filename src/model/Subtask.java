@@ -1,5 +1,8 @@
 package model;
 
+/*
+Subtask - класс для подзадачи внутри задачи Epic.
+ */
 public class Subtask extends Task {
     private int epicId;
 
