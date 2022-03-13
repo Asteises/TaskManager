@@ -9,19 +9,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InMemoryTaskManager implements TaskManager {
+public class InMemoryTaskManager extends InMemoryHistoryManager implements TaskManager {
 
     private final Map<Integer, Task> taskMap;
     private final Map<Integer, Epic> epicMap;
     private final Map<Integer, Integer> subtaskEpicMap;
-    private final List<Task> taskListForHistory;
-    private final int sizeHistory = 10;
+//    protected static List<Task> taskListForHistory;
+//    protected static int sizeHistory = 10;
 
     public InMemoryTaskManager() {
         taskMap = new HashMap<>();
         epicMap = new HashMap<>();
         subtaskEpicMap = new HashMap<>();
-        taskListForHistory = new ArrayList<>();
+//        taskListForHistory = new ArrayList<>();
     }
 
     @Override
@@ -90,23 +90,21 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // checkTaskListForHistory() - метод для проверки заполеннности листа;
-    public void checkTaskListForHistory() {
-        if (taskListForHistory.size() >= sizeHistory) {
-            taskListForHistory.remove(0);
-        }
-    }
+//    public void checkTaskListForHistory() {
+//        if (taskListForHistory.size() >= sizeHistory) {
+//            taskListForHistory.remove(0);
+//        }
+//    }
 
     @Override
     public Task getTaskById(int taskId) {
-        checkTaskListForHistory();
-        taskListForHistory.add(taskMap.get(taskId));
+        add(taskMap.get(taskId));
         return taskMap.get(taskId);
     }
 
     @Override
     public Epic getEpicById(int epicId) {
-        checkTaskListForHistory();
-        taskListForHistory.add(epicMap.get(epicId));
+        add(epicMap.get(epicId));
         return epicMap.get(epicId);
     }
 
@@ -118,8 +116,7 @@ public class InMemoryTaskManager implements TaskManager {
                 .getSubtaskMap()
                 .get(subtaskId);
 
-        checkTaskListForHistory();
-        taskListForHistory.add(subtask);
+        add(subtask);
         return subtask;
     }
 
@@ -189,9 +186,9 @@ public class InMemoryTaskManager implements TaskManager {
     // history() - метод выводит последние 10 просмотренных пользователем заметок;
     @Override
     public List<Task> history() {
-        for (Task task : taskListForHistory) {
+        for (Task task : getHistory()) {
             System.out.println("id: " + task.getId() + ". " + task.getName());
         }
-        return taskListForHistory;
+        return getHistory();
     }
 }

@@ -27,6 +27,11 @@ public class Main {
         manager.saveSubtask(subtask2);
         manager.saveSubtask(subtask3);
 
+        System.out.println("************************");
+
+        manager.history();
+        System.out.println("************************");
+
 //        System.out.println("========================");
 //        System.out.println(manager.getAllTasks());
 //        System.out.println(manager.getAllEpics());
@@ -43,12 +48,14 @@ public class Main {
         manager.updateSubtask(subtask2);
         manager.updateSubtask(subtask3);
 
+
+
 //        System.out.println(manager.getEpicById(epic1.getId()));
 //        System.out.println(manager.getEpicById(epic2.getId()));
 //        System.out.println("========================");
 
-//        manager.printAllTasks(manager.getAllTasks());
-//        manager.printAllEpicsAndSubtasks(manager.getAllEpics());
+        manager.printAllTasks(manager.getAllTasks());
+        manager.printAllEpicsAndSubtasks(manager.getAllEpics());
 
         manager.getTaskById(task1.getId());
         manager.getTaskById(task2.getId());
@@ -65,13 +72,13 @@ public class Main {
         manager.history();
         System.out.println("************************");
 
-//        manager.deleteTask(1);
-//        manager.deleteEpic(4);
-//        manager.deleteSubtask(5);
-//        System.out.println("========================");
-//
-//        manager.printAllTasks(manager.getAllTasks());
-//        manager.printAllEpicsAndSubtasks(manager.getAllEpics());
+        manager.deleteTask(1);
+        manager.deleteEpic(4);
+        manager.deleteSubtask(5);
+        System.out.println("========================");
+
+        manager.printAllTasks(manager.getAllTasks());
+        manager.printAllEpicsAndSubtasks(manager.getAllEpics());
 
     }
 }

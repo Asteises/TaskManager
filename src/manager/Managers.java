@@ -8,6 +8,10 @@ import java.util.List;
 
 public class Managers {
 
+    public HistoryManager getDefaultHistory() {
+        return InMemoryHistoryManager;
+    }
+
     public TaskManager getDefault() {
         return new TaskManager() {
             @Override
