@@ -2,7 +2,7 @@ package manager;
 
 import model.Task;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
@@ -10,7 +10,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     private final int sizeHistory = 10;
 
     public InMemoryHistoryManager() {
-        taskListForHistory = new ArrayList<>();
+        taskListForHistory = new LinkedList<>();
     }
 
     public void checkTaskListForHistory() {

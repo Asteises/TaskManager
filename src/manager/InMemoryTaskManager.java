@@ -9,19 +9,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InMemoryTaskManager extends InMemoryHistoryManager implements TaskManager {
+public class InMemoryTaskManager implements TaskManager {
 
+    private final InMemoryHistoryManager inMemoryHistoryManager;
     private final Map<Integer, Task> taskMap;
     private final Map<Integer, Epic> epicMap;
     private final Map<Integer, Integer> subtaskEpicMap;
-//    protected static List<Task> taskListForHistory;
-//    protected static int sizeHistory = 10;
 
     public InMemoryTaskManager() {
+        inMemoryHistoryManager = new InMemoryHistoryManager();
         taskMap = new HashMap<>();
         epicMap = new HashMap<>();
         subtaskEpicMap = new HashMap<>();
-//        taskListForHistory = new ArrayList<>();
     }
 
     @Override
@@ -89,22 +88,15 @@ public class InMemoryTaskManager extends InMemoryHistoryManager implements TaskM
         }
     }
 
-    // checkTaskListForHistory() - метод для проверки заполеннности листа;
-//    public void checkTaskListForHistory() {
-//        if (taskListForHistory.size() >= sizeHistory) {
-//            taskListForHistory.remove(0);
-//        }
-//    }
-
     @Override
     public Task getTaskById(int taskId) {
-        add(taskMap.get(taskId));
+        inMemoryHistoryManager.add(taskMap.get(taskId));
         return taskMap.get(taskId);
     }
 
     @Override
     public Epic getEpicById(int epicId) {
-        add(epicMap.get(epicId));
+        inMemoryHistoryManager.add(epicMap.get(epicId));
         return epicMap.get(epicId);
     }
 
@@ -116,7 +108,7 @@ public class InMemoryTaskManager extends InMemoryHistoryManager implements TaskM
                 .getSubtaskMap()
                 .get(subtaskId);
 
-        add(subtask);
+        inMemoryHistoryManager.add(subtask);
         return subtask;
     }
 
@@ -186,9 +178,9 @@ public class InMemoryTaskManager extends InMemoryHistoryManager implements TaskM
     // history() - метод выводит последние 10 просмотренных пользователем заметок;
     @Override
     public List<Task> history() {
-        for (Task task : getHistory()) {
+        for (Task task : inMemoryHistoryManager.getHistory()) {
             System.out.println("id: " + task.getId() + ". " + task.getName());
         }
-        return getHistory();
+        return inMemoryHistoryManager.getHistory();
     }
 }

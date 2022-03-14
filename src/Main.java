@@ -1,5 +1,5 @@
 import enums.Status;
-import manager.InMemoryTaskManager;
+import manager.Managers;
 import manager.TaskManager;
 import model.Epic;
 import model.Subtask;
@@ -7,7 +7,8 @@ import model.Task;
 
 public class Main {
     public static void main(String[] args) {
-        InMemoryTaskManager manager = new InMemoryTaskManager();
+        Managers managers = new Managers();
+        TaskManager manager = managers.getDefault();
 
         Task task1 = new Task("Заголовок task1", "Текст task1");
         Task task2 = new Task("Заголовок task2", "Текст task2");
