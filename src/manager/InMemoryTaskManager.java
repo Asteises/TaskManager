@@ -73,16 +73,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearTasks() {
+        inMemoryHistoryManager.deleteAllTasksFromHistory(taskMap);
         taskMap.clear();
     }
 
     @Override
     public void clearEpics() {
+        inMemoryHistoryManager.deleteAllEpicsFromHistory(epicMap);
         epicMap.clear();
     }
 
     @Override
     public void clearSubtasks() {
+        inMemoryHistoryManager.deleteAllSubtasksFromHistory(epicMap);
         for (Epic epic : epicMap.values()) {
             epic.getSubtaskMap().clear();
         }
@@ -131,22 +134,25 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTask(int taskId) {
+        inMemoryHistoryManager.deleteTaskFromHistory(taskMap.get(taskId));
         taskMap.remove(taskId);
-        System.out.println("Удален model.Task id: " + taskId);
+//        System.out.println("Удален model.Task id: " + taskId);
     }
 
     @Override
     public void deleteEpic(int epicId) {
+        inMemoryHistoryManager.deleteTaskFromHistory(epicMap.get(epicId));
         epicMap.remove(epicId);
-        System.out.println("Удален model.Epic id: " + epicId);
+//        System.out.println("Удален model.Epic id: " + epicId);
     }
 
     @Override
     public void deleteSubtask(int subtaskId) {
         for (Epic epic : epicMap.values()) {
+            inMemoryHistoryManager.deleteTaskFromHistory(epic.getSubtaskMap().get(subtaskId));
             epic.getSubtaskMap().remove(subtaskId);
         }
-        System.out.println("Удален model.Subtask id: " + subtaskId);
+//        System.out.println("Удален model.Subtask id: " + subtaskId);
     }
 
     @Override

@@ -69,6 +69,8 @@ public class Main {
         manager.getSubtaskById(subtask2.getId());
         manager.getSubtaskById(subtask2.getId());
         System.out.println("************************");
+        manager.deleteTask(task1.getId());
+        manager.clearSubtasks();
 
         manager.history();
         System.out.println("************************");
