@@ -4,43 +4,34 @@ import model.Epic;
 import model.Subtask;
 import model.Task;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final List<Task> taskListForHistory;
-    private final int sizeHistory = 10;
+    private Node<Task> head;
+    private Node<Task> last;
+    private final Map<Integer, Node<Task>> historyMap;
+    private final int SIZE_HISTORY = 10;
+    private int size = 0;
 
     public InMemoryHistoryManager() {
-        taskListForHistory = new LinkedList<>();
-    }
-
-    public void checkTaskListForHistory() {
-        if (taskListForHistory.size() >= sizeHistory) {
-            taskListForHistory.remove(0);
-        }
-    }
-
-    public void deleteTaskFromHistory(Task task) {
-        taskListForHistory.remove(task);
+        historyMap = new HashMap<>();
     }
 
     public void deleteAllTasksFromHistory(Map<Integer, Task> taskMap) {
         for (Task task : taskMap.values()) {
-            if (taskListForHistory.contains(task)) {
-                deleteTaskFromHistory(task);
+            if (historyMap.get(task.getId()) != null) {
+                remove(task.getId());
             }
         }
     }
 
     public void deleteAllEpicsFromHistory(Map<Integer, Epic> epicMap) {
         for (Epic epicTask : epicMap.values()) {
-            if (taskListForHistory.contains(epicTask)) {
-                 for (Subtask subtask : epicTask.getSubtaskMap().values()) {
-                     taskListForHistory.remove(subtask);
-                 }
-                deleteTaskFromHistory(epicTask);
+            if (epicMap.get(epicTask.getId()) != null) {
+                for (Subtask subtask : epicTask.getSubtaskMap().values()) {
+                    remove(subtask.getId());
+                }
+                remove(epicTask.getId());
             }
         }
     }
@@ -48,8 +39,8 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void deleteAllSubtasksFromHistory(Map<Integer, Epic> epicMap) {
         for (Epic epicTask : epicMap.values()) {
             for (Subtask subtask : epicTask.getSubtaskMap().values()) {
-                if (taskListForHistory.contains(subtask)) {
-                    deleteTaskFromHistory(subtask);
+                if (historyMap.get(subtask.getId()) != null) {
+                    remove(subtask.getId());
                 }
             }
         }
@@ -57,15 +48,66 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        checkTaskListForHistory();
-        if (getHistory().contains(task)){
-            getHistory().remove(task);
-        }
-        getHistory().add(task);
+        linkLast(task);
     }
 
     @Override
     public List<Task> getHistory() {
-        return taskListForHistory;
+        return getTasks();
     }
+
+    @Override
+    public void remove(int id) {
+        removeNode(historyMap.get(id));
+        historyMap.remove(id);
+    }
+
+    public void removeNode(Node<Task> node) {
+        Node<Task> next = node.next;
+        Node<Task> prev = node.prev;
+        if (next == null) {
+            last = prev;
+        } else {
+            next.setPrev(prev);
+        }
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.setNext(next);
+        }
+        node.setNext(null);
+        node.setPrev(null);
+        node.setData(null);
+        size--;
+    }
+
+    public void linkLast(Task task) {
+        if (historyMap.get(task.getId()) != null) {
+            remove(task.getId());
+        }
+        if (SIZE_HISTORY <= size) {
+            remove(head.getData().getId());
+        }
+        Node<Task> temp = last;
+        Node<Task> newNode = new Node<Task>(task, null, temp);
+        last = newNode;
+        if (head == null) {
+            head = newNode;
+        } else {
+            temp.setNext(newNode);
+        }
+        size++;
+        historyMap.put(task.getId(), newNode);
+    }
+
+    public List<Task> getTasks() {
+        List<Task> tasks = new ArrayList<>();
+        Node<Task> temp = head;
+        while (temp != null) {
+            tasks.add(temp.getData());
+            temp = temp.getNext();
+        }
+        return tasks;
+    }
+
 }
