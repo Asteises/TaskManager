@@ -2,8 +2,8 @@ package manager;
 
 public class Node<E> {
     private E data;
-    Node<E> next;
-    Node<E> prev;
+    private Node<E> next;
+    private Node<E> prev;
 
     public Node(E data, Node<E> next, Node<E> prev) {
         this.data = data;

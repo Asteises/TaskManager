@@ -8,44 +8,43 @@ import java.util.*;
 Epic - класс для большой задачи. Большая задача содержит в себе подзадачи - Subtask.
  */
 public class Epic extends Task {
-    private Map<Integer, Subtask> subtaskMap;
+    private List<Subtask> subtaskList;
 
     public Epic(String name, String description) {
         super(name, description);
-        subtaskMap = new HashMap<>();
+        subtaskList = new ArrayList<>();
     }
 
-    public Map<Integer, Subtask> getSubtaskMap() {
-        return subtaskMap;
+    public List<Subtask> getSubtaskList() {
+        return subtaskList;
     }
 
     public void newSubtask(Subtask subtask) {
-        subtaskMap.put(subtask.getId(), subtask);
+        subtaskList.add(subtask);
     }
 
-    @Override
-    public Status getStatus() {
+    public Status changeStatus() {
         int countNew = 0;
         int countDone = 0;
-        for (Subtask subtask : subtaskMap.values()) {
+        for (Subtask subtask : subtaskList) {
             if (subtask.getStatus().equals(Status.NEW)) {
                 countNew++;
             } else if (subtask.getStatus().equals(Status.DONE)) {
                 countDone++;
             }
         }
-        if (countNew == subtaskMap.size()) {
+        if (countNew == subtaskList.size()) {
             super.setStatus(Status.NEW);
-        } else if (countDone == subtaskMap.size()) {
+        } else if (countDone == subtaskList.size()) {
             super.setStatus(Status.DONE);
         } else {
             super.setStatus(Status.IN_PROGRESS);
         }
-        return super.getStatus();
+            return super.getStatus();
     }
 
     @Override
     public String toString() {
-        return super.toString() + "SubTasks:\n" + subtaskMap.toString();
+        return super.toString() + "SubTasks:\n" + subtaskList.toString();
     }
 }

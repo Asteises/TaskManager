@@ -10,8 +10,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node<Task> head;
     private Node<Task> last;
     private final Map<Integer, Node<Task>> historyMap;
-    private final int SIZE_HISTORY = 10;
-    private int size = 0;
 
     public InMemoryHistoryManager() {
         historyMap = new HashMap<>();
@@ -28,7 +26,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void deleteAllEpicsFromHistory(Map<Integer, Epic> epicMap) {
         for (Epic epicTask : epicMap.values()) {
             if (epicMap.get(epicTask.getId()) != null) {
-                for (Subtask subtask : epicTask.getSubtaskMap().values()) {
+                for (Subtask subtask : epicTask.getSubtaskList()) {
                     remove(subtask.getId());
                 }
                 remove(epicTask.getId());
@@ -38,7 +36,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     public void deleteAllSubtasksFromHistory(Map<Integer, Epic> epicMap) {
         for (Epic epicTask : epicMap.values()) {
-            for (Subtask subtask : epicTask.getSubtaskMap().values()) {
+            for (Subtask subtask : epicTask.getSubtaskList()) {
                 if (historyMap.get(subtask.getId()) != null) {
                     remove(subtask.getId());
                 }
@@ -58,13 +56,12 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        removeNode(historyMap.get(id));
-        historyMap.remove(id);
+        removeNode(historyMap.remove(id));
     }
 
-    public void removeNode(Node<Task> node) {
-        Node<Task> next = node.next;
-        Node<Task> prev = node.prev;
+    private void removeNode(Node<Task> node) {
+        Node<Task> next = node.getNext();
+        Node<Task> prev = node.getPrev();
         if (next == null) {
             last = prev;
         } else {
@@ -75,18 +72,11 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             prev.setNext(next);
         }
-        node.setNext(null);
-        node.setPrev(null);
-        node.setData(null);
-        size--;
     }
 
     public void linkLast(Task task) {
         if (historyMap.get(task.getId()) != null) {
             remove(task.getId());
-        }
-        if (SIZE_HISTORY <= size) {
-            remove(head.getData().getId());
         }
         Node<Task> temp = last;
         Node<Task> newNode = new Node<Task>(task, null, temp);
@@ -96,7 +86,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             temp.setNext(newNode);
         }
-        size++;
         historyMap.put(task.getId(), newNode);
     }
 

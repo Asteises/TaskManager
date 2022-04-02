@@ -3,6 +3,7 @@ package model;
 import enums.Status;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /*
 Task - класс описывающий задачу.
@@ -10,15 +11,19 @@ Task - класс описывающий задачу.
 public class Task {
     private String name;
     private String description;
-    private static int classId = 0;
     private int id;
     private Status status;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        id = ++classId;
+        id = createId();
         status = Status.NEW;
+    }
+
+    private int createId() {
+        String id = String.valueOf(UUID.randomUUID());
+        return Integer.parseInt(id.replaceAll("-", "").replaceAll("[a-zA-Z]*", ""));
     }
 
     public String getName() {
