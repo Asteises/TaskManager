@@ -12,9 +12,9 @@ import java.util.Map;
 public class InMemoryTaskManager implements TaskManager {
 
     private final InMemoryHistoryManager inMemoryHistoryManager;
-    private final Map<Integer, Task> taskMap;
-    private final Map<Integer, Epic> epicMap;
-    private final Map<Integer, Subtask> subtaskEpicMap;
+    private final Map<String, Task> taskMap;
+    private final Map<String, Epic> epicMap;
+    private final Map<String, Subtask> subtaskEpicMap;
 
     public InMemoryTaskManager() {
         inMemoryHistoryManager = new InMemoryHistoryManager();
@@ -79,21 +79,21 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTaskById(int taskId) {
+    public Task getTaskById(String taskId) {
         Task task = taskMap.get(taskId);
         inMemoryHistoryManager.add(task);
         return task;
     }
 
     @Override
-    public Epic getEpicById(int epicId) {
+    public Epic getEpicById(String epicId) {
         Epic epic = epicMap.get(epicId);
         inMemoryHistoryManager.add(epic);
         return epic;
     }
 
     @Override
-    public Subtask getSubtaskById(int subtaskId) {
+    public Subtask getSubtaskById(String subtaskId) {
         Subtask subtask = subtaskEpicMap.get(subtaskId);
         inMemoryHistoryManager.add(subtask);
         return subtask;
@@ -119,19 +119,19 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteTask(int taskId) {
+    public void deleteTask(String taskId) {
         inMemoryHistoryManager.remove(taskId);
         taskMap.remove(taskId);
     }
 
     @Override
-    public void deleteEpic(int epicId) {
+    public void deleteEpic(String epicId) {
         inMemoryHistoryManager.remove(epicId);
         epicMap.remove(epicId);
     }
 
     @Override
-    public void deleteSubtask(int subtaskId) {
+    public void deleteSubtask(String subtaskId) {
         for (Epic epic : epicMap.values()) {
             inMemoryHistoryManager.remove(subtaskId);
             epic.getSubtaskList().remove(subtaskId);
@@ -139,7 +139,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Subtask> getAllSubtaskByEpic(int epicId) {
+    public List<Subtask> getAllSubtaskByEpic(String epicId) {
         List<Subtask> subtaskList = new ArrayList<>();
         for (Subtask subtask : epicMap.get(epicId).getSubtaskList()) {
             subtaskList.add(subtask);

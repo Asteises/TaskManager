@@ -1,6 +1,7 @@
 package model;
 
 import enums.Status;
+import enums.Type;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -11,19 +12,26 @@ Task - класс описывающий задачу.
 public class Task {
     private String name;
     private String description;
-    private int id;
+    private String id;
     private Status status;
+    protected Type type;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        id = createId();
+        this.id = createId();
         status = Status.NEW;
+        type = Type.TASK;
     }
 
-    private int createId() {
+    private String createId() {
+
         String id = String.valueOf(UUID.randomUUID());
-        return Integer.parseInt(id.replaceAll("-", "").replaceAll("[a-zA-Z]*", ""));
+        return id;
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public String getName() {
@@ -42,11 +50,11 @@ public class Task {
         this.description = description;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -60,8 +68,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "name: " + name + "\ndescription: " + description +
-                "\nid: " + id + "\nstatus: " + status + "\n";
+        return id + "," + type + "," + name + "," + status + "," + description;
     }
 
     @Override

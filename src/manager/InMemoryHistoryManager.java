@@ -9,13 +9,13 @@ import java.util.*;
 public class InMemoryHistoryManager implements HistoryManager {
     private Node<Task> head;
     private Node<Task> last;
-    private final Map<Integer, Node<Task>> historyMap;
+    private final Map<String, Node<Task>> historyMap;
 
     public InMemoryHistoryManager() {
         historyMap = new HashMap<>();
     }
 
-    public void deleteAllTasksFromHistory(Map<Integer, Task> taskMap) {
+    public void deleteAllTasksFromHistory(Map<String, Task> taskMap) {
         for (Task task : taskMap.values()) {
             if (historyMap.get(task.getId()) != null) {
                 remove(task.getId());
@@ -23,7 +23,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    public void deleteAllEpicsFromHistory(Map<Integer, Epic> epicMap) {
+    public void deleteAllEpicsFromHistory(Map<String, Epic> epicMap) {
         for (Epic epicTask : epicMap.values()) {
             if (epicMap.get(epicTask.getId()) != null) {
                 for (Subtask subtask : epicTask.getSubtaskList()) {
@@ -34,7 +34,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    public void deleteAllSubtasksFromHistory(Map<Integer, Epic> epicMap) {
+    public void deleteAllSubtasksFromHistory(Map<String, Epic> epicMap) {
         for (Epic epicTask : epicMap.values()) {
             for (Subtask subtask : epicTask.getSubtaskList()) {
                 if (historyMap.get(subtask.getId()) != null) {
@@ -55,7 +55,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public void remove(int id) {
+    public void remove(String id) {
         removeNode(historyMap.remove(id));
     }
 

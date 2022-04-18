@@ -1,3 +1,4 @@
+import manager.FileBackedTasksManager;
 import manager.Managers;
 import manager.TaskManager;
 import model.Epic;
@@ -8,9 +9,13 @@ public class Main {
     public static void main(String[] args) {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
+        String backup = "C:\\Users\\User\\IdeaProjects\\TaskManagerGitHub\\src\\resourses\\backup.csv";
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(backup);
 
         Task task1 = new Task("Заголовок task1", "Текст task1");
         Task task2 = new Task("Заголовок task2", "Текст task2");
+        fileBackedTasksManager.saveTask(task1);
+        fileBackedTasksManager.saveTask(task2);
         manager.saveTask(task1);
         manager.saveTask(task2);
 
@@ -28,13 +33,14 @@ public class Main {
         manager.saveSubtask(subtask3);
 
         System.out.println("************************");
-        manager.getTaskById(1);
+        manager.getTaskById(task1.getId());
+        manager.history();
+        System.out.println(task2.getId());
+        System.out.println("************************");
+        manager.getTaskById(task2.getId());
         manager.history();
         System.out.println("************************");
-        manager.getTaskById(2);
-        manager.history();
-        System.out.println("************************");
-        manager.getEpicById(3);
+        manager.getEpicById(epic1.getId());
         manager.history();
         System.out.println("************************");
         manager.deleteTask(task1.getId());

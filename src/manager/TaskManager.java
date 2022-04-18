@@ -33,11 +33,11 @@ public interface TaskManager {
     void clearSubtasks();
 
     // Получение по идентификатору:
-    Task getTaskById(int taskId);
+    Task getTaskById(String taskId);
 
-    Epic getEpicById(int epicId);
+    Epic getEpicById(String epicId);
 
-    Subtask getSubtaskById(int subtaskId);
+    Subtask getSubtaskById(String subtaskId);
 
     // Обновление. Новая версия объекта с верным идентификатором передаются в виде параметра:
     void updateTask(Task task);
@@ -47,14 +47,14 @@ public interface TaskManager {
     void updateSubtask(Subtask subtask);
 
     // Удаление по идентификатору:
-    void deleteTask(int taskId);
+    void deleteTask(String taskId);
 
-    void deleteEpic(int epicId);
+    void deleteEpic(String epicId);
 
-    void deleteSubtask(int subtaskId);
+    void deleteSubtask(String subtaskId);
 
     // Получение списка всех подзадач определённого эпика:
-    List<Subtask> getAllSubtaskByEpic(int epicId);
+    List<Subtask> getAllSubtaskByEpic(String epicId);
 
     // Выводим в консоль все таски для проверки:
     void printAllTasks(List<Task> tasks);
