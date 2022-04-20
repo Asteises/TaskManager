@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    private final InMemoryHistoryManager inMemoryHistoryManager;
+    protected final InMemoryHistoryManager inMemoryHistoryManager;
     private final Map<String, Task> taskMap;
     private final Map<String, Epic> epicMap;
     private final Map<String, Subtask> subtaskEpicMap;
@@ -168,8 +168,12 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> history() {
         List<Task> list = inMemoryHistoryManager.getHistory();
         for (Task task : list) {
-            System.out.println("id: " + task.getId() + ". " + task.getName());
+//            System.out.println("id: " + task.getId() + ". " + task.getName());
         }
         return list;
+    }
+
+    public void setHistory(List<String> list) {
+
     }
 }
