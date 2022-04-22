@@ -38,6 +38,6 @@ public class Main {
 
         File file = new File(backup);
         FileBackedTasksManager backUpManager = FileBackedTasksManager.loadFromFile(file);
-        backUpManager.toString();
+        System.out.print(backUpManager.toString());
     }
 }
