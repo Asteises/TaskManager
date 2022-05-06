@@ -172,8 +172,4 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return list;
     }
-
-    public void setHistory(List<String> list) {
-
-    }
 }
