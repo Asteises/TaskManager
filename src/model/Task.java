@@ -3,6 +3,8 @@ package model;
 import enums.Status;
 import enums.Type;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -16,12 +18,26 @@ public class Task {
     private Status status;
     protected Type type;
 
-    public Task(String name, String description) {
+    private int duration;
+
+    private LocalDateTime startTime;
+
+
+    public Task(String name, String description, int duration, LocalDateTime startTime) {
         this.name = name;
         this.description = description;
         this.id = createId();
         status = Status.NEW;
         type = Type.TASK;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
+    /**
+     * Расчет времени завершения задачи
+     */
+    public LocalDateTime getEndTime(LocalDateTime startTime, int duration) {
+        return startTime.plusMinutes(duration);
     }
 
     private String createId() {

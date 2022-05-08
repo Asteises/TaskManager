@@ -3,6 +3,7 @@ package model;
 import enums.Status;
 import enums.Type;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 /*
@@ -11,8 +12,8 @@ Epic - класс для большой задачи. Большая задач�
 public class Epic extends Task {
     private List<Subtask> subtaskList;
 
-    public Epic(String name, String description) {
-        super(name, description);
+    public Epic(String name, String description, int duration, LocalDateTime startTime) {
+        super(name, description, duration, startTime);
         subtaskList = new ArrayList<>();
         this.type = Type.EPIC;
     }
