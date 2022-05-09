@@ -1,5 +1,6 @@
 package model;
 
+import enums.Status;
 import enums.Type;
 
 import java.time.LocalDateTime;

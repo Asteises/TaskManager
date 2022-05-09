@@ -1,4 +1,4 @@
-package model;
+package Test.model;
 
 class EpicTest {
 

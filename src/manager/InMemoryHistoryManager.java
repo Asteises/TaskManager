@@ -26,7 +26,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void deleteAllEpicsFromHistory(Map<String, Epic> epicMap) {
         for (Epic epicTask : epicMap.values()) {
             if (epicMap.get(epicTask.getId()) != null) {
-                for (Subtask subtask : epicTask.getSubtaskList()) {
+                for (Subtask subtask : epicTask.getSubtasks()) {
                     remove(subtask.getId());
                 }
                 remove(epicTask.getId());
@@ -36,7 +36,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     public void deleteAllSubtasksFromHistory(Map<String, Epic> epicMap) {
         for (Epic epicTask : epicMap.values()) {
-            for (Subtask subtask : epicTask.getSubtaskList()) {
+            for (Subtask subtask : epicTask.getSubtasks()) {
                 if (historyMap.get(subtask.getId()) != null) {
                     remove(subtask.getId());
                 }
@@ -75,6 +75,9 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     public void linkLast(Task task) {
+        if (task == null) {
+            return;
+        }
         if (historyMap.get(task.getId()) != null) {
             remove(task.getId());
         }

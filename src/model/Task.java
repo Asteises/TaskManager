@@ -40,6 +40,22 @@ public class Task {
         return startTime.plusMinutes(duration);
     }
 
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
     private String createId() {
 
         String id = String.valueOf(UUID.randomUUID());
@@ -84,7 +100,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return id + "," + type + "," + name + "," + status + "," + description;
+        return id + "," + type + "," + name + "," + status + "," + description + "," + duration + "," + startTime;
     }
 
     @Override
