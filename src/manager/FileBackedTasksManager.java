@@ -15,22 +15,26 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private String backup;
+    private final Path backup;
+    private final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private final String HEADER = "id,type,name,status,description,epic,duration,startTime";
 
-    public FileBackedTasksManager(String backup) {
+    public FileBackedTasksManager(Path backup) {
         this.backup = backup;
     }
 
     public static void main(String[] args) {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
-        String backup = "C:\\Users\\User\\IdeaProjects\\TaskManagerGitHub\\src\\resourses\\backup.csv";
+        Path backup = Path.of("backup.csv");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(backup);
 
         Task task1 = new Task("Заголовок task1", "Текст task1", 60, LocalDateTime.now());
@@ -54,13 +58,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         fileBackedTasksManager.getTaskById(task2.getId());
         fileBackedTasksManager.deleteTask(task1.getId());
 
-        File file = new File(backup);
+        File file = new File(String.valueOf(backup));
         FileBackedTasksManager backUpManager = FileBackedTasksManager.loadFromFile(file);
         System.out.print(backUpManager.toString());
     }
     public static FileBackedTasksManager loadFromFile(File file) {
 
-        FileBackedTasksManager manager = new FileBackedTasksManager(file.getPath());
+        FileBackedTasksManager manager = new FileBackedTasksManager(Path.of(file.getPath()));
         try (FileReader fileReader = new FileReader(file)) {
             BufferedReader bf = new BufferedReader(fileReader);
             String line;
@@ -84,7 +88,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                         manager.saveSubtask((Subtask) task);
                     }
                     if (historyList.contains(task.getId())) {
-                        manager.inMemoryHistoryManager.add(task);
+                        manager.historyManager.add(task);
                     }
                 }
             }
@@ -118,16 +122,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     /**
      * создаем LocalDateTime для метода fromString из startTime
      */
-
-    private static LocalDateTime stringToLocalDateTime(String string) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        return LocalDateTime.parse(string, dateTimeFormatter);
+    private LocalDateTime stringToLocalDateTime(String string) {
+        return LocalDateTime.parse(string, this.DATE_TIME_FORMATTER);
     }
 
     public static Task fromString(String value) {
         String[] strings = value.split(",");
         if (strings[1].equals("TASK")) {
-            Task task = new Task(strings[2], strings[4], Integer.parseInt(strings[6]), stringToLocalDateTime(strings[7]));
+            Task task = new Task(strings[2], strings[4], Integer.parseInt(strings[5]), LocalDateTime.parse(strings[6]));
             task.setId(strings[0]);
             task.setStatus(Status.valueOf(strings[3]));
             return task;
@@ -137,7 +139,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             epic.setStatus(Status.valueOf(strings[3]));
             return epic;
         } else  {
-            Subtask subtask = new Subtask(strings[5], strings[2], strings[4], Integer.parseInt(strings[6]), stringToLocalDateTime(strings[7]));
+            Subtask subtask = new Subtask(strings[5], strings[2], strings[4], Integer.parseInt(strings[5]), LocalDateTime.parse(strings[6]));
             subtask.setId(strings[0]);
             subtask.setStatus(Status.valueOf(strings[3]));
             return subtask;
@@ -145,8 +147,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     public void save() {
-        try (BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(backup), StandardCharsets.UTF_8))) {
-            bf.write("id,type,name,status,description,epic,duration,startTime");
+        try (BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(String.valueOf(backup)), StandardCharsets.UTF_8))) {
+            bf.write(HEADER);
             bf.newLine();
             for (Task task : super.getAllTasks()) {
                 bf.write(task.toString());

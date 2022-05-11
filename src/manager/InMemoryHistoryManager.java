@@ -9,15 +9,15 @@ import java.util.*;
 public class InMemoryHistoryManager implements HistoryManager {
     private Node<Task> head;
     private Node<Task> last;
-    private final Map<String, Node<Task>> historyMap;
+    private final Map<String, Node<Task>> history;
 
     public InMemoryHistoryManager() {
-        historyMap = new HashMap<>();
+        history = new HashMap<>();
     }
 
     public void deleteAllTasksFromHistory(Map<String, Task> taskMap) {
         for (Task task : taskMap.values()) {
-            if (historyMap.get(task.getId()) != null) {
+            if (history.get(task.getId()) != null) {
                 remove(task.getId());
             }
         }
@@ -37,7 +37,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void deleteAllSubtasksFromHistory(Map<String, Epic> epicMap) {
         for (Epic epicTask : epicMap.values()) {
             for (Subtask subtask : epicTask.getSubtasks()) {
-                if (historyMap.get(subtask.getId()) != null) {
+                if (history.get(subtask.getId()) != null) {
                     remove(subtask.getId());
                 }
             }
@@ -56,7 +56,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(String id) {
-        removeNode(historyMap.remove(id));
+        removeNode(history.remove(id));
     }
 
     private void removeNode(Node<Task> node) {
@@ -78,7 +78,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task == null) {
             return;
         }
-        if (historyMap.get(task.getId()) != null) {
+        if (history.get(task.getId()) != null) {
             remove(task.getId());
         }
         Node<Task> temp = last;
@@ -89,7 +89,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             temp.setNext(newNode);
         }
-        historyMap.put(task.getId(), newNode);
+        history.put(task.getId(), newNode);
     }
 
     public List<Task> getTasks() {

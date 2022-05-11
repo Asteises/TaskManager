@@ -8,13 +8,18 @@ import java.time.LocalDateTime;
 /*
 Subtask - класс для подзадачи внутри задачи Epic.
  */
+/**
+ * Зачем передавать статус вручную для новой задачи? При создании задача имеет статус NEW, так как она новая.
+ * То есть, зачем пользователю создавать задачу со статусом В процессе или Задача завершена?
+ */
 public class Subtask extends Task {
-    private String epicId;
+    private final String epicId;
 
     public Subtask(String epicId, String name, String description, int duration, LocalDateTime startTime) {
         super(name, description, duration, startTime);
         this.epicId = epicId;
         this.type = Type.SUBTASK;
+        this.setStatus(Status.NEW);
     }
 
     public LocalDateTime getEndTime(LocalDateTime startTime, int duration) {

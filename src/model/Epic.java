@@ -11,7 +11,7 @@ Epic - класс для большой задачи. Большая задач�
  */
 public class Epic extends Task {
 
-    LocalDateTime epicEndTime;
+    private LocalDateTime epicEndTime;
     private final List<Subtask> subtasks;
 
     public Epic(String name, String description) {
@@ -41,6 +41,10 @@ public class Epic extends Task {
         this.epicEndTime = localDateTimeList.get(localDateTimeList.size() - 1);
     }
 
+    /**
+     * Не понятно, как задать правильное время при отсутствии подзадач, исходя из условия: Время начала — дата старта
+     * самой ранней подзадачи, а время завершения — время окончания самой поздней из задач.
+     */
     public LocalDateTime getEpicEndTime() {
         return epicEndTime;
     }
