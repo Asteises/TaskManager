@@ -14,14 +14,19 @@ public class Epic extends Task {
     private LocalDateTime epicEndTime;
     private final List<Subtask> subtasks;
 
-    public Epic(String name, String description) {
-        super(name, description, 0, null);
+    /**
+     * Когда Epic смоздается в нем нет подзадач, а именно из времени подзадачи должно установиться время начала Epic.
+     * Вот условие задачи - Время начала — дата старта самой ранней подзадачи, а время завершения — время окончания
+     * самой поздней из задач.
+     */
+    public Epic(Status status, String name, String description) {
+        super(status, name, description, 0, null);
         subtasks = new ArrayList<>();
         this.type = Type.EPIC;
     }
 
     /**
-     * Проходимся по всем сабтаскам епика и складываем продолжительность всех егно подзадач
+     * Проходимся по всем сабтаскам епика и складываем продолжительность всех его подзадач.
      */
     public void setDuration() {
         int epicDuration = 0;

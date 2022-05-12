@@ -33,23 +33,23 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public static void main(String[] args) {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
-        Path backup = Path.of("backup.csv");
+        Path backup = Path.of("./src/backup.csv");
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(backup);
 
-        Task task1 = new Task("Заголовок task1", "Текст task1", 60, LocalDateTime.now());
-        Task task2 = new Task("Заголовок task2", "Текст task2", 100, LocalDateTime.now().plusMinutes(60));
+        Task task1 = new Task(Status.NEW,"Заголовок task1", "Текст task1", 60, LocalDateTime.now());
+        Task task2 = new Task(Status.NEW, "Заголовок task2", "Текст task2", 100, LocalDateTime.now().plusMinutes(60));
         fileBackedTasksManager.saveTask(task1);
         fileBackedTasksManager.saveTask(task2);
 
-        Epic epic1 = new Epic("Заголовок epic1", "Текст epic1");
-        Epic epic2 = new Epic("Заголовок epic2", "Текст epic2");
+        Epic epic1 = new Epic(Status.NEW, "Заголовок epic1", "Текст epic1");
+        Epic epic2 = new Epic(Status.NEW, "Заголовок epic2", "Текст epic2");
         fileBackedTasksManager.saveEpic(epic1);
         fileBackedTasksManager.saveEpic(epic2);
 
-        Subtask subtask1 = new Subtask(epic1.getId(), "Заголовок subtask1", "Текст subtask1", 20, LocalDateTime.now());
-        Subtask subtask2 = new Subtask(epic1.getId(), "Заголовок subtask2", "Текст subtask2", 30, LocalDateTime.now().plusMinutes(20));
-        Subtask subtask3 = new Subtask(epic1.getId(), "Заголовок subtask3", "Текст subtask3", 10, LocalDateTime.now().plusMinutes(50));
+        Subtask subtask1 = new Subtask(Status.NEW, epic1.getId(), "Заголовок subtask1", "Текст subtask1", 20, LocalDateTime.now().plusMinutes(160));
+        Subtask subtask2 = new Subtask(Status.NEW, epic1.getId(), "Заголовок subtask2", "Текст subtask2", 30, LocalDateTime.now().plusMinutes(180));
+        Subtask subtask3 = new Subtask(Status.NEW, epic1.getId(), "Заголовок subtask3", "Текст subtask3", 10, LocalDateTime.now().plusMinutes(210));
         fileBackedTasksManager.saveSubtask(subtask1);
         fileBackedTasksManager.saveSubtask(subtask2);
         fileBackedTasksManager.saveSubtask(subtask3);
@@ -58,7 +58,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         fileBackedTasksManager.getTaskById(task2.getId());
         fileBackedTasksManager.deleteTask(task1.getId());
 
-        File file = new File(String.valueOf(backup));
+        File file = new File(String.valueOf("./src/backup.csv"));
         FileBackedTasksManager backUpManager = FileBackedTasksManager.loadFromFile(file);
         System.out.print(backUpManager.toString());
     }
@@ -129,19 +129,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public static Task fromString(String value) {
         String[] strings = value.split(",");
         if (strings[1].equals("TASK")) {
-            Task task = new Task(strings[2], strings[4], Integer.parseInt(strings[5]), LocalDateTime.parse(strings[6]));
+            Task task = new Task(Status.valueOf(strings[3]), strings[2], strings[4], Integer.parseInt(strings[5]), LocalDateTime.parse(strings[6]));
             task.setId(strings[0]);
-            task.setStatus(Status.valueOf(strings[3]));
             return task;
         } else if (strings[1].equals("EPIC")) {
-            Epic epic = new Epic(strings[2], strings[4]);
+            Epic epic = new Epic(Status.valueOf(strings[3]), strings[2], strings[4]);
             epic.setId(strings[0]);
-            epic.setStatus(Status.valueOf(strings[3]));
             return epic;
         } else  {
-            Subtask subtask = new Subtask(strings[5], strings[2], strings[4], Integer.parseInt(strings[5]), LocalDateTime.parse(strings[6]));
+            Subtask subtask = new Subtask(Status.valueOf(strings[3]), strings[7], strings[2], strings[4], Integer.parseInt(strings[5]), LocalDateTime.parse(strings[6]));
             subtask.setId(strings[0]);
-            subtask.setStatus(Status.valueOf(strings[3]));
             return subtask;
         }
     }

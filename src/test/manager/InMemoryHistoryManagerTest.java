@@ -1,5 +1,6 @@
 package manager;
 
+import enums.Status;
 import manager.InMemoryHistoryManager;
 import manager.InMemoryTaskManager;
 import manager.TaskManager;
@@ -17,7 +18,7 @@ class InMemoryHistoryManagerTest {
         TaskManager taskManager = new InMemoryTaskManager();
         InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
 
-        Task task1 = new Task("Test task  name", "Test task description", 100, LocalDateTime.now());
+        Task task1 = new Task(Status.NEW,"Test task  name", "Test task description", 100, LocalDateTime.now());
         taskManager.saveTask(task1);
 
     }

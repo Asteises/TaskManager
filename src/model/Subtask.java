@@ -15,11 +15,10 @@ Subtask - класс для подзадачи внутри задачи Epic.
 public class Subtask extends Task {
     private final String epicId;
 
-    public Subtask(String epicId, String name, String description, int duration, LocalDateTime startTime) {
-        super(name, description, duration, startTime);
+    public Subtask(Status status, String epicId, String name, String description, int duration, LocalDateTime startTime) {
+        super(status, name, description, duration, startTime);
         this.epicId = epicId;
         this.type = Type.SUBTASK;
-        this.setStatus(Status.NEW);
     }
 
     public LocalDateTime getEndTime(LocalDateTime startTime, int duration) {

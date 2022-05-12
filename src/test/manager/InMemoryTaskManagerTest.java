@@ -1,5 +1,6 @@
 package manager;
 
+import enums.Status;
 import manager.InMemoryTaskManager;
 import manager.TaskManager;
 import model.Epic;
@@ -16,19 +17,18 @@ class InMemoryTaskManagerTest {
 
     @Test
     public Task getTaskTest() {
-        return new Task("Test addNewTask", "Test addNewTask description",
+        return new Task(Status.NEW,"Test addNewTask", "Test addNewTask description",
                 100, LocalDateTime.now());
     }
 
     @Test
     public Epic getEpicTest() {
-        return new Epic("Test epic  name", "Test epic description");
+        return new Epic(Status.NEW,"Test epic  name", "Test epic description");
     }
 
     @Test
-    public Subtask getSubtaskTest() {
-        Epic epic = getEpicTest();
-        return new Subtask(epic.getId(), "Test subtask name", "Test subtask description",
+    public Subtask getSubtaskTest(Epic epic) {
+        return new Subtask(Status.NEW, epic.getId(), "Test subtask name", "Test subtask description",
                 10, LocalDateTime.now());
     }
 
@@ -38,7 +38,7 @@ class InMemoryTaskManagerTest {
         Epic epic = getEpicTest();
         taskManager.saveEpic(epic);
 
-        assertNotNull(epic, "epic не найдена.");
+        assertNotNull(taskManager.getEpicById(epic.getId()), "epic не найдена.");
         assertEquals(1, taskManager.getAllEpics().size(), "Неверное количество epic.");
         assertEquals(epic, taskManager.getAllEpics().get(0), "epic не совпадают.");
         assertNotNull(taskManager.getEpicById(epic.getId()), "epic не найден");
@@ -59,9 +59,9 @@ class InMemoryTaskManagerTest {
     @Test
     void saveSubtask() {
         TaskManager taskManager = new InMemoryTaskManager();
-        Epic epic = new Epic("Test epic  name", "Test epic description");
+        Epic epic = new Epic(Status.NEW, "Test epic  name", "Test epic description");
         taskManager.saveEpic(epic);
-        Subtask subtask = getSubtaskTest();
+        Subtask subtask = getSubtaskTest(epic);
         taskManager.saveSubtask(subtask);
 
         assertNotNull(subtask, "Subtask не найдена.");
@@ -73,8 +73,9 @@ class InMemoryTaskManagerTest {
     @Test
     void clearTasks() {
         TaskManager taskManager = new InMemoryTaskManager();
-        Task task = new Task("Test addNewTask", "Test addNewTask description", 10, LocalDateTime.now());
+        Task task = new Task(Status.NEW,"Test addNewTask", "Test addNewTask description", 10, LocalDateTime.now());
         taskManager.saveTask(task);
+        assertEquals(1, taskManager.getAllTasks().size(), "Неверное количество task.");
         taskManager.clearTasks();
 
         assertEquals(0, taskManager.getAllTasks().size(), "Неверное количество task.");
@@ -83,19 +84,19 @@ class InMemoryTaskManagerTest {
     @Test
     void clearEpics() {
         TaskManager taskManager = new InMemoryTaskManager();
-        Epic epic = new Epic("Test epic  name", "Test epic description");
+        Epic epic = new Epic(Status.NEW,"Test epic  name", "Test epic description");
         taskManager.saveEpic(epic);
         taskManager.clearEpics();
 
-        assertEquals(1, taskManager.getAllEpics().size(), "Неверное количество epic.");
+        assertEquals(0, taskManager.getAllEpics().size(), "Неверное количество epic.");
     }
 
     @Test
     void clearSubtasks() {
         TaskManager taskManager = new InMemoryTaskManager();
-        Epic epic = new Epic("Test epic  name", "Test epic description");
+        Epic epic = new Epic(Status.NEW,"Test epic  name", "Test epic description");
         taskManager.saveEpic(epic);
-        Subtask subtask = getSubtaskTest();
+        Subtask subtask = getSubtaskTest(epic);
         taskManager.saveSubtask(subtask);
 //        taskManager.clearSubtasks();
 
@@ -127,7 +128,7 @@ class InMemoryTaskManagerTest {
         TaskManager taskManager = new InMemoryTaskManager();
         Epic epic = getEpicTest();
         taskManager.saveEpic(epic);
-        Subtask subtask = getSubtaskTest();
+        Subtask subtask = getSubtaskTest(epic);
         taskManager.saveSubtask(subtask);
         taskManager.updateSubtask(subtask);
 
@@ -141,7 +142,7 @@ class InMemoryTaskManagerTest {
         taskManager.saveTask(task);
         taskManager.deleteTask(task.getId());
 
-        assertNull(task, "Task найдена.");
+        assertNull(taskManager.getTaskById(task.getId()), "Task найдена.");
         assertEquals(0, taskManager.getAllTasks().size(), "Неверное количество task.");
     }
 
@@ -160,11 +161,12 @@ class InMemoryTaskManagerTest {
     @Test
     void deleteSubtask() {
         TaskManager taskManager = new InMemoryTaskManager();
-        Subtask subtask = getSubtaskTest();
+        Epic epic = getEpicTest();
+        Subtask subtask = getSubtaskTest(epic);
         taskManager.saveSubtask(subtask);
         taskManager.deleteSubtask(subtask.getId());
 
-        assertNull(subtask, "subtask найдена.");
+        assertNull(taskManager.getSubtaskById(subtask.getId()), "subtask найдена.");
         assertEquals(0, taskManager.getAllSubtasks().size(), "Неверное количество subtask.");
     }
 
@@ -185,37 +187,37 @@ class InMemoryTaskManagerTest {
 
         assertNotNull(tasks, "Задачи на возвращаются.");
         assertEquals(2, tasks.size(), "Неверное количество задач.");
-        assertEquals(task1, tasks.get(0), "Задачи не совпадают.");
-        assertEquals(task2, tasks.get(1), "Задачи не совпадают.");
+        assertTrue(tasks.stream().anyMatch(task -> task.equals(task1)));
+        assertTrue(tasks.stream().anyMatch(task -> task.equals(task2)));
     }
 
     @Test
     void printAllEpicsAndSubtasks() {
         TaskManager taskManager = new InMemoryTaskManager();
-        Epic epic1 = new Epic("Test epic1  name", "Test epic1 description");
-        Epic epic2 = new Epic("Test epic2  name", "Test epic2 description");
+        Epic epic1 = new Epic(Status.NEW,"Test epic1  name", "Test epic1 description");
+        Epic epic2 = new Epic(Status.NEW,"Test epic2  name", "Test epic2 description");
         taskManager.saveEpic(epic1);
         taskManager.saveEpic(epic2);
         final List<Epic> epics = taskManager.getAllEpics();
 
         assertNotNull(epics, "Задачи на возвращаются.");
         assertEquals(2, epics.size(), "Неверное количество задач.");
-        assertEquals(epic1, epics.get(0), "Задачи не совпадают.");
-        assertEquals(epic2, epics.get(1), "Задачи не совпадают.");
+        assertTrue(epics.stream().anyMatch(epic -> epic.equals(epic1)));
+        assertTrue(epics.stream().anyMatch(epic -> epic.equals(epic2)));
     }
 
     @Test
     void history() {
         TaskManager taskManager = new InMemoryTaskManager();
-        Epic epic1 = new Epic("Test epic1  name", "Test epic1 description");
+        Epic epic1 = new Epic(Status.NEW,"Test epic1  name", "Test epic1 description");
         Task task1 = getTaskTest();
-        Subtask subtask1 = getSubtaskTest();
+        Subtask subtask1 = getSubtaskTest(epic1);
         taskManager.saveTask(task1);
         taskManager.saveEpic(epic1);
         taskManager.saveSubtask(subtask1);
-        taskManager.updateTask(task1);
-        taskManager.updateEpic(epic1);
-        taskManager.updateSubtask(subtask1);
+        taskManager.getTaskById(task1.getId());
+        taskManager.getEpicById(epic1.getId());
+        taskManager.getSubtaskById(subtask1.getId());
         final List<Task> taskListHistory = taskManager.history();
 
         assertNotNull(taskListHistory, "Задачи на возвращаются.");

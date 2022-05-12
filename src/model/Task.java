@@ -27,11 +27,11 @@ public class Task {
      * Зачем передавать статус вручную для новой задачи? При создании задача имеет статус NEW, так как она новая.
      * То есть, зачем пользователю создавать задачу со статусом В процессе или Задача завершена?
      */
-    public Task(String name, String description, int duration, LocalDateTime startTime) {
+    public Task(Status status, String name, String description, int duration, LocalDateTime startTime) {
         this.name = name;
         this.description = description;
         this.id = createId();
-        status = Status.NEW;
+        this.status = status;
         type = Type.TASK;
         this.duration = duration;
         this.startTime = startTime;

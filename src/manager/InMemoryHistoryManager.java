@@ -60,21 +60,23 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private void removeNode(Node<Task> node) {
-        Node<Task> next = node.getNext();
-        Node<Task> prev = node.getPrev();
-        if (next == null) {
-            last = prev;
-        } else {
-            next.setPrev(prev);
-        }
-        if (prev == null) {
-            head = next;
-        } else {
-            prev.setNext(next);
+        if (node != null) {
+            Node<Task> next = node.getNext();
+            Node<Task> prev = node.getPrev();
+            if (next == null) {
+                last = prev;
+            } else {
+                next.setPrev(prev);
+            }
+            if (prev == null) {
+                head = next;
+            } else {
+                prev.setNext(next);
+            }
         }
     }
 
-    public void linkLast(Task task) {
+    private void linkLast(Task task) {
         if (task == null) {
             return;
         }
