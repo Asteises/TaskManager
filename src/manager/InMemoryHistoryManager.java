@@ -23,6 +23,10 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
+    public Map<String, Node<Task>> getHistoryMap() {
+        return history;
+    }
+
     public void deleteAllEpicsFromHistory(Map<String, Epic> epicMap) {
         for (Epic epicTask : epicMap.values()) {
             if (epicMap.get(epicTask.getId()) != null) {

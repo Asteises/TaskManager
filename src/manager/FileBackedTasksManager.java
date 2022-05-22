@@ -23,7 +23,7 @@ import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private final Path backup;
-    private final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     private final String HEADER = "id,type,name,status,description,epic,duration,startTime";
 
     public FileBackedTasksManager(Path backup) {
@@ -34,7 +34,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         Managers managers = new Managers();
         TaskManager manager = managers.getDefault();
         Path backup = Path.of("backup.csv");
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(backup);
 
         Task task1 = new Task("Заголовок task1", "Текст task1", 60, LocalDateTime.now());
@@ -88,7 +87,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                         manager.saveSubtask((Subtask) task);
                     }
                     if (historyList.contains(task.getId())) {
-                        manager.historyManager.add(task);
+                        manager.history().add(task);
                     }
                 }
             }
